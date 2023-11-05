@@ -1,40 +1,19 @@
-name: gh-pages
-
+name: build
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
 jobs:
-  gh-pages:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          node-version: 18.x
-
-      - name: Install pnpm
-        run: npm install --global pnpm
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build VuePress site
-        run: pnpm build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          branch: gh-pages
+          folder: dist
