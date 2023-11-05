@@ -31,12 +31,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build VuePress site
+      - name: Build Vite site
         run: pnpm build
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: dist
-          repository-name: ${{ github.repository }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
